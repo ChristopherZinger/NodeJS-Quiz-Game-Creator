@@ -38,17 +38,8 @@ const questions = [
 
 // save multiple documents
 const  saveQ = function(db){
-    setTimeout(()=>{
-    // db.quizQuestions.insertMany(questions)
-    // const newQ = new Question(questions);
-    // newQ.save((err, record)=>{
-    //     if(err){
-    //         return console.log('error while saving : ', err)
-    //     }else{
-    //         console.log('added new obj: ')
-    //     }
-    // });
 
+    // inserts multiple questions to db
     Question.collection.insert(questions, function(err, docs){
         if(err){
             return console.log(err);
@@ -56,6 +47,7 @@ const  saveQ = function(db){
             console.log('succesfully populated.')
         }
     })
+    // wait and confirm that records were saved
     setTimeout(() => {
         console.log('find questions : ', Question.find( function(err, data){
             if(err){
@@ -67,7 +59,6 @@ const  saveQ = function(db){
     }, 2000);
 
 
-    },2000)
 
 }
 

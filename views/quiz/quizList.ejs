@@ -4,9 +4,21 @@
     <%- include("../partials/head")  %>
 </head>
 <body>
+    <h1>Quiz List</h1>
+
+    <%- include("../partials/nav")  %>
+    <ul>
+        <% for(var i = 0; i < data.length; i++){ %>
+            <li><h2><a href=""> <%= data[i].title %> </a></h2>  </li>
+            <ul>
+                <li><a href="/quiz/delete/?quizslug=<%= data[i].slug %>">remove</a> </li>
+                <li><a href="/quiz/edit/?quizslug=<%= data[i].slug %>">edit</a> </li>
+            </ul>
+        <% } %>
+    </ul>
+
     
 </body>
 </html>
 
 
-<h1>Quiz List</h1>

@@ -4,8 +4,15 @@
     <%- include("../partials/head")  %>
 </head>
 <body>
+    <%- include("../partials/nav")  %>
+
+    <h1>create new quiz</h1>
     
+    <form action="/quiz/create/" method="POST">
+        <label for="title">Quiz Title</label>
+        <input type="text" name="title" id="title" />
+        <input type="submit" value="next">
+    </form>
 </body>
 </html>
 
-<h1>create new quiz</h1>

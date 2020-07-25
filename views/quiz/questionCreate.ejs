@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("../partials/head")  %>
+    <style>
+        form{
+            width: 500px;
+        }
+        input{
+            margin: 10px;
+            width: 80%;
+
+        }
+    </style>
+</head>
+<body>
+    <%- include("../partials/nav")  %>
+    <h1>Create question</h1>
+    <form action="/quiz/create/question/?quiz=<%- quizId %>" method="POST">
+        <div>
+            <label for="question">Question</label>
+            <input type="text" name="question" id="question" />
+        </div>
+        <div>
+            <label for="answerA">A</label>
+            <input type="text" name="answerA" id="answerA" />
+        </div>
+        <div>
+            <label for="answerB">B</label>
+            <input type="text" name="answerB" id="answerB" />
+        </div>
+        <div>
+            <label for="answerC">C</label>
+            <input type="text" name="answerC" id="answerC" />
+        </div>
+        <div>
+            <label for="answerD">D</label>
+            <input type="text" name="answerD" id="answerD" />
+        </div>
+        <div>
+            <label for="correctAnswer">Correct Answer</label>
+            <select name="correctAnswer" id="correctAnswer" >
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+              </select>
+        </div>
+        <div>
+            <input type="submit" value="submit">
+        </div>
+    </form>
+    
+</body>
+</html>

@@ -15,7 +15,7 @@ db.on('error', err=> console.log(err));
 db.once('open', ()=> console.log('Connection with mongoDG ready!'));
 
 // Middleware
-app.set('view-engine', 'ejs');
+app.set('view engine', 'ejs');
 app.use(express.urlencoded( { extended:false } ))
 
 
@@ -28,7 +28,5 @@ app.listen(3000)
 
 
 
-// populate db
-const popQuiz = require('./models/quiz/populateQuizModel');
-popQuiz(db);
+
 

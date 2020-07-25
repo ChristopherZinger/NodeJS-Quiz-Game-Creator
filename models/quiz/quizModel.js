@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-
+// Create Quiz Model
 let Quiz = new Schema({
         title : {
             type: String,
@@ -22,7 +22,9 @@ let Quiz = new Schema({
     },
     { collection : "quizes"}
 )
+const QuizModel = mongoose.model("Quiz", Quiz);
 
+// Create Question Model
 let Question = new Schema({
         question : { type : String },
         answers: {
@@ -39,11 +41,11 @@ let Question = new Schema({
     },
     { collection : 'quizQuestions'}
 )
-
-// const QuizModel = mongoose.model("Quiz", Quiz);
 const QuestionModel = mongoose.model("Question", Question);
 
-// module.exports.QuizModel = Quiz;
+
+// export models
+module.exports.QuizModel = QuizModel;
 module.exports.QuestionModel = QuestionModel ;
 
 
