@@ -3,11 +3,25 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
-// let Quiz = new Schema({
+let Quiz = new Schema({
+        title : {
+            type: String,
+            required: true,
+            unique: true
+        },
+        slug : {
+            type : String,
+            unique: true,
+            required: true
+        },
+        questions : [{
+            type : Schema.Types.ObjectId,
+            ref: "quizQuestions"
+        }]
 
-//     },
-//     { collection : "Quizes"}
-// )
+    },
+    { collection : "quizes"}
+)
 
 let Question = new Schema({
         question : { type : String },
@@ -18,15 +32,20 @@ let Question = new Schema({
             d : String
         },
         correctAnswer : String,
+        quiz : {
+            type : Schema.Types.ObjectId,
+            ref : "quizes"
+        }
     },
-    { collection : 'QuizQuestions'}
+    { collection : 'quizQuestions'}
 )
 
 // const QuizModel = mongoose.model("Quiz", Quiz);
-const QuestionModel = mongoose.model("Quesion", Question);
+const QuestionModel = mongoose.model("Question", Question);
 
 // module.exports.QuizModel = Quiz;
 module.exports.QuestionModel = QuestionModel ;
+
 
 
 

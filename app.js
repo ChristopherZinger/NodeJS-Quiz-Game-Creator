@@ -25,3 +25,10 @@ baseRouters(app);
 const quizRouters = require('./routers/quiz/quizRouters');
 quizRouters(app);
 app.listen(3000)
+
+
+
+// populate db
+const popQuiz = require('./models/quiz/populateQuizModel');
+popQuiz(db);
+

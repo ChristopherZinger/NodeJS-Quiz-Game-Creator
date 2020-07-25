@@ -3,6 +3,15 @@ const QuestionModel = require('../../models/quiz/quizModel').QuestionModel;
 
 
 module.exports = function(app){
+    app.get('/quiz/populate/questions', function(req, res){
+        // populate db
+        const popQuiz = require('../models/quiz/populateQuizModel');
+        popQuiz(db);
+        // redirect home
+        res.redirect('/')
+    })
+    
+
     app.get('/quiz/create', function(req, res){
         res.render('../views/quiz/quizCreate.ejs');
     })
