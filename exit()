@@ -1,0 +1,29 @@
+[33mcommit bf577a3520ebdd2510737eed054bdebac2b6ea56[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: ChristopherZinger <krzysztof.zinger@gmail.com>
+Date:   Sun Jul 26 10:52:12 2020 +0200
+
+    Fixed static files so it works with folder structure
+
+[33mcommit 09f467439ef7c36669ad6287121ef5213ff17134[m
+Author: ChristopherZinger <krzysztof.zinger@gmail.com>
+Date:   Sun Jul 26 09:56:43 2020 +0200
+
+    path to assets added
+
+[33mcommit 9abdb7bbe4616c0bd2a5dec391f1562b748a71dc[m[33m ([m[1;31morigin/master[m[33m, [m[1;32mquizCreate[m[33m)[m
+Author: ChristopherZinger <krzysztof.zinger@gmail.com>
+Date:   Sat Jul 25 19:46:02 2020 +0200
+
+    Added functionality: Create and Delete Quiz together with questions that belong to it.
+
+[33mcommit ae1bb97089d1a18f0222b924b1551483e43c78d1[m[33m ([m[1;32mpopulatedb[m[33m)[m
+Author: ChristopherZinger <krzysztof.zinger@gmail.com>
+Date:   Sat Jul 25 10:42:53 2020 +0200
+
+    Added populateQuizModel.js - simple quiz questions population
+
+[33mcommit d7b9d0df29575cac7ebf5e2ceca63ba2157f2da6[m
+Author: ChristopherZinger <krzysztof.zinger@gmail.com>
+Date:   Sat Jul 25 08:54:28 2020 +0200
+
+    First Commit! Added base views

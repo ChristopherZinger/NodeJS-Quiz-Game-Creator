@@ -1,9 +1,9 @@
 const QuestionModel = require('../../models/quiz/quizModel').QuestionModel;
 const QuizModel = require('../../models/quiz/quizModel').QuizModel;
-const mongoost = require('mongoose');
+const mongoose = require('mongoose');
 
 module.exports = function(app){
-    // POPULATE QUESTIONS
+    // POPULATE QUESTIONS - DEV ONLY
     app.get('/quiz/populate/questions/$', function(req, res){
         // populate db
         const popQuiz = require('../models/quiz/populateQuizModel');
@@ -12,7 +12,7 @@ module.exports = function(app){
         res.redirect('/');
     })
 
-    // REMOVE QUIZLESS QUESTIONS
+    // REMOVE QUIZLESS QUESTIONS - DEV ONLY
     app.get('/quiz/questions/remove-quizless-questions/$', function(req, res){
         const questions = QuestionModel.find()
             .catch(err=> console.log('error while removing quizless questions. ', err))
@@ -56,7 +56,6 @@ module.exports = function(app){
 
     //  DELETE QUIZ 
     app.get('/quiz/delete/', function(req, res){
-
         // find quiz in db
         const quiz = QuizModel.findOne({slug: req.query.quizslug })
             .catch(err=>console.log('Error while looking for quiz to delete. ', err))
@@ -73,26 +72,42 @@ module.exports = function(app){
                         .then(x=>{ console.log(`Question that belong the the quiz "${quiz.title}", was removed`) })          
                     });
                 });
+                // delete the quiz
                 QuizModel.findOneAndDelete({_id : quiz.id})
                     .catch(err=> console.log('Error while removig quiz from db.', err))
                     .then(x=> console.log('Quiz was removed from db.')); 
-            })
-            
-        // find all questions related to the quiz
-        // const questions2delete = Questions.find({quiz})
-
-        // remove questiosn
-
-        // remoce quiz
-
-        // return
-        
+            })        
         res.redirect('/quiz/list/')
     })
 
     // CREATE NEW QUESTION - GET
     app.get('/quiz/create/question', function(req, res){
-        res.render('../views/quiz/questionCreate', { quizId : req.query.quiz });
+        const quizId = req.query.quiz;
+        var result;
+        QuizModel.findById(quizId)
+            .catch(err=> {throw err})
+            .then(quiz => {
+                // find questions that belong to the quiz
+                if(quiz.questions.length > 0 ){
+                    // create query array
+                    const queryArr = quiz.questions
+                        .map(id=> mongoose.Types.ObjectId(id));
+
+                    // pull questions out of the db
+                    QuestionModel.find({
+                        '_id': { $in : queryArr }
+                    })
+                    .catch(err => { throw err})
+                    .then(quizzes => {
+                        res.render('../views/quiz/questionCreate', 
+                        { quizId : quizId, quizTitle : quiz.title , quizQuestions : quizzes});
+                    })
+                }else {
+                    // no quizes to return
+                    res.render('../views/quiz/questionCreate', 
+                    { quizId : quizId, quizTitle : quiz.title , quizQuestions : []});
+                }
+            });
     })
 
     // CREATE NEW QUESTION - POST
@@ -132,15 +147,32 @@ module.exports = function(app){
             } ); 
     })
 
+    // PUBLISH QUIZ
+    app.post('/quiz/create/publish/', function(req, res){
+        const quizId = req.query.quiz;
+        QuizModel.findById(quizId)
+            .catch(err => next(err))
+            .then(quiz => {
+                quiz.isPublished = true;
+                quiz.save(function(err, data){
+                    if(err){
+                        console.log('error while updating the item.', err)
+                        res.status.send(500);   
+                    }
+                })
+            })
+        res.redirect('/quiz/list/');
+    })
+
     // QUIZ LIST - GET
     app.get('/quiz/list/$', function(req, res){
-
-        const data = QuizModel.find(function(err, data){
-            if(err){
-                return console.log('error while quering for all quizes. ', err);
-            } else {
-                res.render('../views/quiz/quizList.ejs', {data: data})
-            }
+        const data = QuizModel.find( {isPublished : true},
+            function(err, data){
+                if(err){
+                    return console.log('error while quering for all quizes. ', err);
+                } else {
+                    res.render('../views/quiz/quizList.ejs', {data: data})
+                }
         })
     })
 }

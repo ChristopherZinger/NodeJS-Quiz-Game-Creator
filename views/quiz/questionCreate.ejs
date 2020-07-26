@@ -15,7 +15,7 @@
 </head>
 <body>
     <%- include("../partials/nav")  %>
-    <h1>Create question</h1>
+    <h1><%= quizTitle %> : add question.</h1>
     <form action="/quiz/create/question/?quiz=<%- quizId %>" method="POST">
         <div>
             <label for="question">Question</label>
@@ -50,6 +50,21 @@
             <input type="submit" value="submit">
         </div>
     </form>
-    
+
+    <br> <br>
+    <form action="/quiz/create/publish/?quiz=<%- quizId %>" method="POST">
+        <input type="text" hidden>
+        <label for="submit">If you finished click publish. After that you will not be able to edit the quiz any more.</label>
+        <div>
+            <input type="submit" value="publish" id="submit">
+        </div>
+    </form>
+
+    <h3>Questions : </h3>
+    <ul>
+        <% for(var i = 0; i < quizQuestions.length; i++) { %>
+           <li><a href=""> <%= quizQuestions[i].question %> </a></li> 
+        <% } %>
+    </ul>
 </body>
 </html>

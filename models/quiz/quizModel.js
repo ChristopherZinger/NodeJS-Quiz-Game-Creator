@@ -14,6 +14,7 @@ let Quiz = new Schema({
             unique: true,
             required: true
         },
+        isPublished : Boolean,
         questions : [{
             type : Schema.Types.ObjectId,
             ref: "quizQuestions"
