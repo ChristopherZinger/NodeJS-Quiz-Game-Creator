@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const path = require('path');
 
 // set up mongoDB 
 if( process.env.NODE_ENV !== "production" ){
@@ -16,7 +17,8 @@ db.once('open', ()=> console.log('Connection with mongoDG ready!'));
 
 // Middleware
 app.set('view engine', 'ejs');
-app.use(express.urlencoded( { extended:false } ))
+app.use('/static', express.static(path.join(__dirname, '/public')));
+app.use(express.urlencoded( { extended:false } ));
 
 
 // init routers
