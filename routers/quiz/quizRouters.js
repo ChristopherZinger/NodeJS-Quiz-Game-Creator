@@ -80,7 +80,7 @@ module.exports = function(app){
         res.redirect('/quiz/list/')
     })
 
-    // CREATE NEW QUESTION - GET
+    // CREATE QUESTION - GET
     app.get('/quiz/create/question', function(req, res){
         const quizId = req.query.quiz;
         var result;
@@ -98,9 +98,9 @@ module.exports = function(app){
                         '_id': { $in : queryArr }
                     })
                     .catch(err => { throw err})
-                    .then(quizzes => {
+                    .then(questions => {
                         res.render('../views/quiz/questionCreate', 
-                        { quizId : quizId, quizTitle : quiz.title , quizQuestions : quizzes});
+                        { quizId : quizId, quizTitle : quiz.title , quizQuestions : questions});
                     })
                 }else {
                     // no quizes to return
@@ -110,9 +110,72 @@ module.exports = function(app){
             });
     })
 
-    // CREATE NEW QUESTION - POST
-    app.post('/quiz/create/question/', function(req, res){
+    // EDIT QUIZ - GET
+    app.get('/quiz/edit/', function(req, res){
+        console.log('edit quiz - get')
+        // get query data
+        const quizSlug = req.query.quizslug;
 
+        // find quiz to be edited
+        QuizModel.findOne({slug : quizSlug })
+            .catch(err => { throw err })
+            .then(quiz => {
+                // find questions that belong to the quiz
+                if(quiz.questions.length > 0 ){
+                    // create query array
+                    const queryArr = quiz.questions
+                        .map(id=> mongoose.Types.ObjectId(id));
+
+                    // pull questions out of the db
+                    QuestionModel.find({
+                        '_id': { $in : queryArr }
+                    })
+                    .catch(err => { throw err})
+                    .then(questions => {
+                        res.render('../views/quiz/questionCreate', 
+                        {   quizId : quiz.id, 
+                            quizTitle : quiz.title , 
+                            quizQuestions : questions, 
+                            question : questions[0]
+                        });
+                    })
+                } else {
+                    console.log('no quiestions')
+                    // no quizes to return
+                    res.redirect('/quiz/list/');
+                }
+            })
+        // const questionId = req.query.question;
+        // find quiz and question
+        // res.redirect('/quiz/list/');
+    })
+
+    // CREATE UPDATE QUESTION - POST
+    app.post('/quiz/create/question/', function(req, res){
+        // if quety consist of 'question' update existing Question
+        if( typeof req.query.question !== 'undefined' ){
+
+            // find question
+            const questionId = req.query.question;
+            QuestionModel.findById(questionId)
+
+                .catch(err => {throw err})
+                .then(question => {
+  
+                    question.question = req.body.question;
+                    question.answers.a = req.body.answerA;
+                    question.answers.b = req.body.answerB;
+                    question.answers.c = req.body.answerC;
+                    question.answers.d = req.body.answerD;
+                    question.correctAnswer = req.body.correctAnswer;
+                    question.save();
+                    console.log('saved!!!')
+                    res.redirect('/quiz/list/');
+                    res.end()
+                    return;
+                })     
+        } else {
+        // create new question
         // find quiz in db
         const quiz = QuizModel.findById({_id: req.query.quiz})  
             .catch(err=> console.log('Error :', err))
@@ -144,7 +207,8 @@ module.exports = function(app){
                     }
                 })
 
-            } ); 
+            }); 
+        }
     })
 
     // PUBLISH QUIZ
@@ -166,7 +230,7 @@ module.exports = function(app){
 
     // QUIZ LIST - GET
     app.get('/quiz/list/$', function(req, res){
-        const data = QuizModel.find( {isPublished : true},
+        const data = QuizModel.find(
             function(err, data){
                 if(err){
                     return console.log('error while quering for all quizes. ', err);

@@ -16,6 +16,7 @@
 <body>
     <%- include("../partials/nav")  %>
     <h1><%= quizTitle %> : add question.</h1>
+    <% if( typeof question == 'undefined') { %>
     <form action="/quiz/create/question/?quiz=<%- quizId %>" method="POST">
         <div>
             <label for="question">Question</label>
@@ -47,11 +48,48 @@
               </select>
         </div>
         <div>
-            <input type="submit" value="submit">
+            <input type="submit" value="save and add next">
         </div>
     </form>
 
     <br> <br>
+    <% } else { %>
+        <form action="/quiz/create/question/?quiz=<%- quizId %>&question=<%- question.id%>" method="POST">
+            <div>
+                <label for="question">Question</label>
+                <input type="text" name="question" id="question" value="<%= question.question %>" />
+            </div>
+            <div>
+                <label for="answerA">A</label>
+                <input type="text" name="answerA" id="answerA" value="<%= question.answers.a %>"/>
+            </div>
+            <div>
+                <label for="answerB">B</label>
+                <input type="text" name="answerB" id="answerB" value="<%= question.answers.b %>"/>
+            </div>
+            <div>
+                <label for="answerC">C</label>
+                <input type="text" name="answerC" id="answerC" value="<%= question.answers.c %>"/>
+            </div>
+            <div>
+                <label for="answerD">D</label>
+                <input type="text" name="answerD" id="answerD" value="<%= question.answers.d %>"/>
+            </div>
+            <div>
+                <label for="correctAnswer">Correct Answer</label>
+                <select name="correctAnswer" id="correctAnswer" >
+                    <option value="A" <% if (question.correctAnswer == "A") { %> selected<% } %> >A</option>
+                    <option value="B" <% if (question.correctAnswer == "B") { %> selected<% } %> >B</option>
+                    <option value="C" <% if (question.correctAnswer == "C") { %> selected<% } %> >C</option>
+                    <option value="D" <% if (question.correctAnswer == "D") { %> selected<% } %> >D</option>
+                  </select>
+            </div>
+            <div>
+                <input type="submit" value="save">
+            </div>
+        </form>
+    <% } %>
+
     <form action="/quiz/create/publish/?quiz=<%- quizId %>" method="POST">
         <input type="text" hidden>
         <label for="submit">If you finished click publish. After that you will not be able to edit the quiz any more.</label>
