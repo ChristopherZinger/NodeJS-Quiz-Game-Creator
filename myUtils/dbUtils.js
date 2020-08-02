@@ -33,8 +33,11 @@ module.exports = {
         .then(quiz=>{
             return quiz === null ? QuestionModel.findById(quizQuery) : quiz;
         })
-        .then(data=>{          
-            if ( data.isPublished === undefined ){
+        .then(data=>{  
+            if (data === null){
+                return null;
+            }        
+            if ( typeof data.isPublished === undefined ){
                 // data is question 
                 return QuizModel.findById(data.quiz);
             } else if ( typeof data.isPublished === 'boolean'){
@@ -91,7 +94,6 @@ module.exports = {
             return data
         })
         .then(quiz => {
-            console.log('my callback')
             callback(quiz);
         })
         .catch(err=> {

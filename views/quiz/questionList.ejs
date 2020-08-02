@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("../partials/head")  %>
+</head>
+<body>
+    <%- include("../partials/nav")  %>
+    <h1>Quiz : <%= quiz.title %></h1>
+    <!-- PUBLISH QUIZ-->
+    <% if(!quiz.isPublished ){ %>
+        <form action="/<%- quiz.slug %>/publish/" method="POST">
+            <input type="text" hidden>
+            <label for="submit">If you finished click publish. After that you will not be able to edit the quiz any more.</label>
+            <div>
+                <input type="submit" value="publish" id="submit">
+            </div>
+        </form>   
+    <% } %>
+    
+
+
+    <!-- Remove this quiz -->
+    <a href="/<%- quiz.slug %>/delete/">Delete this quiz</a>
+
+    <!-- List of questions -->
+    <h4>Question List: </h4>
+    <ul>
+        <% for(var i = 0; i < questions.length; i++) { %>
+        <li><a href="/<%- quiz.slug %>/question/edit/<%- questions[i].id %>/"><%= questions[i].question %></a></li>
+        <% } %>
+    </ul>
+    <a href="/<%- quiz.slug %>/question/create">add question</a>
+
+
+</body>
+</html>
+

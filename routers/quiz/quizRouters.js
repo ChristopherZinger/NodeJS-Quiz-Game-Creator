@@ -4,6 +4,20 @@ const mongoose = require('mongoose');
 const findQuizAndQuestions = require('../../myUtils/dbUtils').findQuizAndQuestions;
 const findQuiz = require('../../myUtils/dbUtils').findQuiz;
 
+
+/*
+
+/quiz/create/
+/:quiz_slug/edit/id
+/:quiz_slug/delte
+
+/:quiz_slug/question/list
+/:quiz_slug/question/create/
+/:quiz_slug/question/update/id
+/:quiz_slug/question/delete/id
+
+*/
+
 module.exports = function(app){
     // POPULATE QUESTIONS - DEV ONLY
     app.get('/quiz/populate/questions/$', function(req, res){
@@ -60,8 +74,8 @@ module.exports = function(app){
                     })
                     // save quiz model
                     quiz.save()
-                    .then( data => { 
-                        res.redirect(`/quiz/create/question/${data.id}/`);
+                    .then( quiz => { 
+                        res.redirect(`/${quiz.slug}/question/create/`);
                     })
                     .catch(err => {
                         console.log('Problem when saving quiz model. ', err);
@@ -89,43 +103,46 @@ module.exports = function(app){
 
 
     //  DELETE QUIZ 
-    app.get('/quiz/delete/', function(req, res){
+    app.get('/:quizSlug/delete/', function(req, res){
         // find quiz in db
-        const quizSlug = req.query.quizslug;
+        const quizSlug = req.params.quizSlug;
         findQuizAndQuestions(quizSlug, (quiz, questions)=>{
-
-        })
-        const quiz = QuizModel.findOne({slug: req.query.quizslug })
-            .catch(err=>console.log('Error while looking for quiz to delete. ', err))
-            .then(quiz=>{
-                console.log('quiz questions to remove : ', quiz.questions)
-                // find questions that belong to the quiz
-                const questions = QuestionModel.find({quiz: quiz.id})
-                .catch(err=> err)
-                .then(questions=>{
-                    Array.from(questions).forEach(q=>{
+            if( Array.isArray(questions)){
+                questions.forEach((q, i)=>{
                     // delete question that belong to this quiz
                     QuestionModel.findOneAndDelete({ _id : q.id})
                     .catch(err=> err)
-                    .then(x=>{ console.log(`Question that belong the the quiz "${quiz.title}", was removed`) })          
-                    });
+                    .then(()=>{ 
+                        console.log(`Question that belong the the quiz "${quiz.title}", was removed`)
+                    }) 
                 });
-                // delete the quiz
-                QuizModel.findOneAndDelete({_id : quiz.id})
-                    .catch(err=> console.log('Error while removig quiz from db.', err))
-                    .then(x=> console.log('Quiz was removed from db.')); 
-            })        
-        res.redirect('/quiz/list/')
+            }
+            // delete quiz from db
+            QuizModel.findOneAndDelete({ slug : quizSlug })
+            .catch(err=> {
+                console.log('Error while removing quiz from db. ', err);
+                return err;
+            })
+            // return
+            res.redirect('/quiz/list/')
+        })
+    })
+
+    // QUIZ QUESTIONS LIST - GET
+    app.get('/:quizSlug/question/list',(req, res)=>{
+        const quizSlug = req.params.quizSlug;
+        findQuizAndQuestions(quizSlug, (quiz, questions)=>{
+            questions  === null ? questions = [] : null;
+            res.render('../views/quiz/questionList', { quiz : quiz, questions : questions })
+        })
     })
 
 
     // CREATE QUESTION - GET
-    app.get('/quiz/create/question/:quizId', function(req, res){
-        const quizId = req.params.quizId;
-        
-        findQuizAndQuestions(quizId, (quiz, questions)=>{      
+    app.get('/:quizSlug/question/create/', function(req, res){
+        const quizSlug = req.params.quizSlug;
+        findQuizAndQuestions(quizSlug, (quiz, questions)=>{      
             questions === null ? questions = [] : null;
-            console.log('here', quiz, 'questions: ', questions)
             res.render('../views/quiz/questionCreate',
             {   
                 quiz : quiz, 
@@ -134,56 +151,73 @@ module.exports = function(app){
         })
     })
 
+    //  CREATE QUESTION - POST
+    app.post('/:quizSlug/question/create/', function(req, res){
+        // create new question
+        // find quiz in db
+        const quizSlug = req.params.quizSlug;
+        findQuiz(quizSlug, quiz => {
+            // pre-save question
+            const question = new QuestionModel({
+                question : req.body.question,
+                answers : {
+                    a : req.body.answerA,
+                    b : req.body.answerB,
+                    c : req.body.answerC,
+                    d : req.body.answerD,
+                },
+                correctAnswer : req.body.correctAnswer,
+                quiz : quiz.id,
+            })
+            question.save()
+            .then(question => {
+                // save new question to the quiz 
+                quiz.questions.push(question);
+                quiz.save();
+
+                // response
+                res.redirect(`/${quiz.slug}/question/list`);
+            })
+            .catch(err =>{ 
+                console.log('Error while adding new question to the quiz. ', err);
+                res.redirect(`/${quiz.slug}/question/list/`)
+            })
+        });
+       
+    })
+
 
     // EDIT QUIZ - GET
-    app.get('/quiz/edit/', function(req, res){
-        // get query data
-        const quizSlug = req.query.quizslug;
-        findQuizAndQuestions(quizSlug, (quiz, questions)=>{
-            if( quiz!== null ){
-                if(questions !== null){
-                    
-                    // find question data to populate with
-                    let question = questions.filter(q => q._id == req.query.question);
-                    if( question.length > 0 ){
-                        question = question[0];
-                    } else {
-                        question = questions[0];
-                    }
+    app.get('/:quizSlug/question/edit/:questionId', function(req, res){
 
-                    // populate form with question data
-                    res.render('../views/quiz/questionCreate', 
-                    {   quiz : quiz, 
-                        questions : questions,
-                        question : question
-                    }); 
-                } else {
-                    // there are no quesitons in this quiz yet
-                    res.render('../views/quiz/questionCreate', { quiz : quiz, questions : [] });     
-                }
-            } else{
-            // quiz could not be found in db
-            res.redirect('/quiz/list/');
+        const questionId = req.params.questionId;
+        const quizSlug = req.params.quizSlug;
+
+        findQuizAndQuestions(quizSlug, (quiz, questions)=>{
+            questions === null ? questions = [] : null;
+            const question = questions.filter(q => q.id === questionId )[0];
+
+            if(question === undefined){
+                console.log('Can not find question to edit')
+                res.redirect(`/${quiz.slug}/question/list/`)
+            }else{
+                // populate form with question data
+                res.render('../views/quiz/questionCreate', 
+                {   quiz : quiz, 
+                    questions : questions,
+                    question : question
+                }); 
             }
         })
     });
 
-    // UPDATE QUESTION - POST
-    app.get('/quiz/update/question/:questionId', function(req, res){
-        
-    })
-
-
-    // CREATE UPDATE QUESTION - POST
-    app.post('/quiz/create/question/:quizId/', function(req, res){
-        // if query consist of 'question' update existing Question
-        if( typeof req.query.question !== 'undefined' ){
-
-            // find question
-            const questionId = req.query.question;
-            QuestionModel.findById(questionId)
-            .catch(err => {throw err})
-            .then(question => {
+    // EDIT QUESTION - POST
+    app.post('/:quizSlug/question/edit/:questionId', function(req, res){
+        const quizSlug = req.params.quizSlug;
+        const questionId = req.params.questionId;
+        QuestionModel.findById(questionId)
+        .then(question => {
+            if(question !== null ){
                 question.question = req.body.question;
                 question.answers.a = req.body.answerA;
                 question.answers.b = req.body.answerB;
@@ -191,63 +225,31 @@ module.exports = function(app){
                 question.answers.d = req.body.answerD;
                 question.correctAnswer = req.body.correctAnswer;
                 question.save();
-                res.redirect('/quiz/list/');
+                res.redirect(`/${quizSlug}/question/list/`);
                 res.end()
-                return;
-            })     
-        } else {
-            // create new question
-            // find quiz in db
-            const quiz = QuizModel.findById({_id: req.query.quiz})  
-            .catch(err=> console.log('Error :', err))
-            .then(quiz => {
-
-                // pre save question
-                const question = new QuestionModel({
-                    question : req.body.question,
-                    answers : {
-                        a : req.body.answerA,
-                        b : req.body.answerB,
-                        c : req.body.answerC,
-                        d : req.body.answerD,
-                    },
-                    correctAnswer : req.body.correctAnswer,
-                    quiz : quiz,
-
-                })
-                // save question
-                question.save(function(err, data){
-                    if(err){
-                        return console.log('error whils saving the question : ', err);
-                    } else {
-                        // save new question to the quiz 
-                        quiz.questions.push(question);
-                        quiz.save();
-
-                        // response
-                        res.redirect('/quiz/create/question/?quiz=' + req.query.quiz);
-                    }
-                })
-
-            }); 
-        }
+            }
+        })
+        .catch(err => {
+            console.log('Error while editing the question. ', err);
+            return err;
+        })          
     })
 
 
     // PUBLISH QUIZ
-    app.post('/quiz/create/publish/', function(req, res){
-        const quizId = req.query.quiz;
-        findQuiz(quizId, (quiz,questions)=>{
+    app.post('/:quizSlug/publish/', function(req, res){
+        const quizId = req.params.quizSlug;
+        findQuiz(quizId, (quiz)=>{
             quiz.isPublished = true;
-            quiz.save(function(err, data){
-                if(err){
-                    console.log('error while updating the item.', err)
-                    res.status.send(500);   
-                }
+            quiz.save()
+            .catch(err=>{
+                console.log('error while updating the item.', err)
+                res.status.send(500); 
             })
-            res.redirect('/quiz/list/');
+            .then(()=>{
+                res.redirect(`/${quiz.slug}/question/list`);
+            }) 
         })
-
     });
 
 
@@ -264,3 +266,4 @@ module.exports = function(app){
 
     })
 }
+

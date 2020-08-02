@@ -12,16 +12,16 @@
             <% if( quizes[i].isPublished ) { %>
                 <li>
                     <h2>
-                        <a href=""> 
+                        <a href="/<%= quizes[i].slug %>/question/list/"> 
                             <%= quizes[i].title %>  
                         </a>
                     </h2> 
                 </li>
     
-                <ul>
-                    <li><a href="/quiz/delete/?quizslug=<%= quizes[i].slug %>">remove</a> </li>
-                    <li><a href="/quiz/edit/?quizslug=<%= quizes[i].slug %>">edit</a> </li>
-                </ul>
+                <!-- <ul>
+                    <li><a href="/<%= quizes[i].slug %>/delete/">remove</a> </li>
+                    <li><a href="/<%= quizes[i].slug %>/edit/">edit</a> </li>
+                </ul> -->
             <% } %> 
         <% } %>
     </ul>
@@ -32,16 +32,15 @@
             <% if( !quizes[i].isPublished ) { %>
                 <li>
                     <h2>
-                        <a href=""> 
+                        <a href="/<%= quizes[i].slug %>/question/list/"> 
                             <%= quizes[i].title %>  
                         </a>
                     </h2> 
                 </li>
     
-                <ul>
-                    <li><a href="/quiz/delete/?quizslug=<%= quizes[i].slug %>">remove</a> </li>
-                    <li><a href="/quiz/edit/?quizslug=<%= quizes[i].slug %>">edit</a> </li>
-                </ul>
+                <!-- <ul>
+                    <li><a href="/<%- quizes[i].slug %>/delete/">remove</a> </li>
+                </ul> -->
             <% } %> 
         <% } %>
     </ul>

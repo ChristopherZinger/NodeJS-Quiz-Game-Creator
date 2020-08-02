@@ -17,7 +17,7 @@
     <%- include("../partials/nav")  %>
     <h1><%- quiz.title %> : add question.</h1>
     <% if( typeof question == 'undefined') { %>
-    <form action="/quiz/create/question/?quiz=<%- quiz.id %>" method="POST">
+    <form action="/<%- quiz.slug %>/question/create/" method="POST">
         <div>
             <label for="question">Question</label>
             <input type="text" name="question" id="question" />
@@ -54,7 +54,7 @@
 
     <br> <br>
     <% } else { %>
-        <form action="/quiz/create/question/?quiz=<%- quiz.id %>" method="POST">
+        <form action="/<%- quiz.slug %>/question/edit/<%- question.id %>" method="POST">
             <div>
                 <label for="question">Question</label>
                 <input type="text" name="question" id="question" value="<%= question.question %>" />
@@ -90,19 +90,11 @@
         </form>
     <% } %>
 
-    <form action="/quiz/create/publish/?quiz=<%- quiz.id %>" method="POST">
-        <input type="text" hidden>
-        <label for="submit">If you finished click publish. After that you will not be able to edit the quiz any more.</label>
-        <div>
-            <input type="submit" value="publish" id="submit">
-        </div>
-    </form>
-
     <% if( typeof questions !== [] ) { %>
         <h3>Questions : </h3>
         <ul>
             <% for(var i = 0; i < questions.length; i++) { %>
-            <li><a href="/quiz/edit/?quizslug=<%- quiz.slug %>&question=<%- questions[i].id %>"> <%= questions[i].question %> </a></li> 
+            <li><a href="/<%- quiz.slug %>/question/edit/<%- questions[i].id %>"> <%= questions[i].question %> </a></li> 
             <% } %>
         </ul>
     <% } %>
