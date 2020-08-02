@@ -21,29 +21,29 @@ const findQuizByIdOrSlug = async function(quizQuery){
 module.exports = {
     findQuizAndQuestions : (quizQuery, callback)=>{
         /*
-        Try to find quiz and related questions by id or slug
+        Try to find quiz and related questions by id or slug or question Ids
         returns quiz as object and questions as list
         or quiz as null or questions as null if not found in db
         */
-
         // try to find quiz by slug
         const quiz = QuizModel.findOne({ slug : quizQuery })
-        .then(data => {
-            if(data === null ){
-                // try to find quiz id
-                return QuizModel.findById(quizQuery)
-                .then(data =>{
-                    return data !== null ? data : null;
-                })
-                // .then(data => {
-                //     //try to find quiz by question ID
-                //     return QuestionModel.findById(quizQuery)
-                // })
-                // .then(data=>{
-
-                // })
+        .then(quiz => {
+            return quiz === null ? QuizModel.findById(quizQuery)  : quiz;
+        })
+        .then(quiz=>{
+            return quiz === null ? QuestionModel.findById(quizQuery) : quiz;
+        })
+        .then(data=>{          
+            if ( data.isPublished === undefined ){
+                // data is question 
+                return QuizModel.findById(data.quiz);
+            } else if ( typeof data.isPublished === 'boolean'){
+                // data is actualy a quiz 
+                return data;
+            } else {
+                // nothing was found
+                return null;
             }
-            return data
         })
 
         const questions = quiz.then(quiz => {
@@ -64,7 +64,7 @@ module.exports = {
             return null; 
         })
         .catch(err=> { 
-            console.log('dbUtils.js Error while looking for quiz.');
+            console.log('dbUtils.js Error while looking for quiz.', err);
             return err;
         })
 
