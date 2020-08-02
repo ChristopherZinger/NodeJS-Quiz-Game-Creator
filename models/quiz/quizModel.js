@@ -7,7 +7,7 @@ let Quiz = new Schema({
         title : {
             type: String,
             required: true,
-            unique: true
+            unique: false
         },
         slug : {
             type : String,
@@ -29,10 +29,10 @@ const QuizModel = mongoose.model("Quiz", Quiz);
 let Question = new Schema({
         question : { type : String },
         answers: {
-            a : String,
-            b : String,
-            c : String,
-            d : String
+            a : {type : String, required : true },
+            b : {type : String, required : true},
+            c : {type : String, required : true},
+            d : {type : String, required : true}
         },
         correctAnswer : String,
         quiz : {
