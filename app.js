@@ -27,6 +27,10 @@ const baseRouters = require('./routers/base/baseRouters');
 baseRouters(app);
 const quizRouters = require('./routers/quiz/quizRouters');
 quizRouters(app);
+const apiQuizRouters = require('./routers/quiz/apiQuizRouters');
+apiQuizRouters(app);
+
+
 app.listen(3000)
 
 

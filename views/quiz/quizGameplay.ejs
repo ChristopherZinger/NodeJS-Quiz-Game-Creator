@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("../partials/head")  %>
+</head>
+<body>
+    <%- include("../partials/nav")  %>
+    <h1>Game Play : <%= quiz.title %></h1>
+
+    
+
+
+    <form action="/api/<%- quiz.slug %>" id="quizform">
+        <input type="text" name="quizSlug" value="<%- quiz.slug %>" id="quizSlugInput" hidden/>
+        <input type="text" name="gameplayKey" id="gameplayKeyInput" hidden/>
+        <input type="submit" value="start" id="quizSubmit">
+    </form>
+    <br><br>
+
+    <button>ajax call!</button>
+
+    <script src="/assets/base/js/jquery-3.5.1.min.js">
+    </script>
+    <script src="/assets/quiz/js/quizGameplay.js">
+    </script>
+</body>
+</html>

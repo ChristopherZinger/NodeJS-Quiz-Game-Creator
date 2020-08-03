@@ -236,6 +236,23 @@ module.exports = function(app){
     })
 
 
+    // DELETE QUESTION - POST
+    app.post(`/:quizSlug/question/delete/:questionId/$`,(req, res)=>{
+        const quizSlug = req.params.quizSlug;
+        const questionId = req.params.questionId;
+
+        QuestionModel.findOneAndDelete({ _id : questionId })
+        .then(()=>{
+            return QuizModel.findOne({ slug : quizSlug });
+        })
+        .then(quiz => {
+            quiz.questions = quiz.questions.filter(id => id != questionId );
+            quiz.save();
+            res.redirect(`/${quiz.slug}/question/list/`)
+        })
+    })
+
+
     // PUBLISH QUIZ
     app.post('/:quizSlug/publish/', function(req, res){
         const quizId = req.params.quizSlug;
@@ -265,5 +282,15 @@ module.exports = function(app){
         });
 
     })
+
+    // QUIZ GAMEPLAY - GET
+    app.get('/:quizSlug/gameplay/', async (req, res)=>{
+        const slug = req.params.quizSlug;
+        const quiz = await QuizModel.findOne({ slug : slug })
+
+        res.render('../views/quiz/quizGameplay', { quiz : quiz })
+    })
+
+    //
 }
 
