@@ -13,11 +13,11 @@
     <form action="/api/<%- quiz.slug %>" id="quizform">
         <input type="text" name="quizSlug" value="<%- quiz.slug %>" id="quizSlugInput" hidden/>
         <input type="text" name="gameplayKey" id="gameplayKeyInput" hidden/>
+        <input type="text" name="questionId" value id="questionIdInput" hidden>
         <input type="submit" value="start" id="quizSubmit">
     </form>
     <br><br>
 
-    <button>ajax call!</button>
 
     <script src="/assets/base/js/jquery-3.5.1.min.js">
     </script>
