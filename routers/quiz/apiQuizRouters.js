@@ -18,6 +18,59 @@ server : send next question or final page;
 
 */
 
+const evaluateUserAnswer = async (req, res, gameplay)=>{
+        // evaluate user answer from request
+        if (typeof req.body.question.id === 'string' && req.body.question.id.length > 0){ // validate id
+            const questioIdQuery = req.body.question.id;
+
+            //find question to evaluate in db
+            let question;
+            try{
+                question = await QuestionModel.findById(questioIdQuery)
+            } catch (err){
+                console.log('Error while quering for QuestionModel for answer evaluation. \n ',
+                    err)
+            }
+            
+            //if question model found in db
+            if(typeof question == 'object' && question !== null ){
+                // check user answer
+                const userAnswer = req.body.question.answer;
+                const gameplayAnswerObj = gameplay.answers.find(a => a.question.equals(questioIdQuery));
+                if( ['A', 'B', 'C', 'D'].includes(userAnswer) ){
+                        // save the valid answer
+                        gameplayAnswerObj.answer = userAnswer; 
+                        // update score
+                        if( question.correctAnswer === userAnswer){
+                            gameplay.score += 1;
+                        }
+                    } else {
+                        // user did not submited any valid answer
+                        gameplayAnswerObj.answer = null; 
+                    }
+                    // save model
+                    try{
+                        await gameplay.save()
+                    } catch (err){
+                        console.log('Error while saving user answer to the GameplayModel. ', err)
+                    }
+
+            } else {
+                // cant find QuestionModel in db to compare with user Answer.
+                consolg.log('can\'t find question with this id. ')
+                //res.status(500);
+            }
+        } else if (typeof req.body.question.id === 'string' 
+            && req.body.question.id.length === 0) {
+            // this is first questino to be saved
+            console.log('First question in this game will be send.')
+        } else {
+                // client provided incorrect data for quiz id orthis is first question
+                console.log('client provided incorrect data for quiz id')
+                res.status(500);
+        }
+}
+
 
 module.exports = function(app){
     app.post('/api/:quizSlug/', async (req, res)=>{
@@ -89,9 +142,11 @@ module.exports = function(app){
             // redirect to results
             console.log('All question were asked. this is the end of the game \n ',
                 newQuestion, ' ', typeof newQuestion )
+                data.isOver = true;
+                data.gameplayId = gameplay.id;
 
                 res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(data.isOver = True));
+                res.end(JSON.stringify(data));
                 return;
         }
 
@@ -106,56 +161,9 @@ module.exports = function(app){
             data.question = await QuestionModel.findById(newQuestion);
         } 
 
-        // evaluate answer from request
-        if (typeof req.body.question.id === 'string' && req.body.question.id.length > 0){ // validate id
-            const questioIdQuery = req.body.question.id;
+        // // evaluate user answer from request
+        evaluateUserAnswer(req, res, gameplay)
 
-            //find question to evaluate in db
-            let question;
-            try{
-                question = await QuestionModel.findById(questioIdQuery)
-            } catch (err){
-                console.log('Error while quering for QuestionModel for answer evaluation. \n ',
-                    err)
-            }
-            
-            //if question model found in db
-            if(typeof question == 'object' && question !== null ){
-                // check user answer
-                const userAnswer = req.body.question.answer;
-                const gameplayAnswerObj = gameplay.answers.find(a => a.question.equals(questioIdQuery));
-                if( ['A', 'B', 'C', 'D'].includes(userAnswer) ){
-                        // save the valid answer
-                        gameplayAnswerObj.answer = userAnswer; 
-                        // update score
-                        if( question.correctAnswer === userAnswer){
-                            gameplay.score += 1;
-                        }
-                    } else {
-                        // user did not submited any valid answer
-                        gameplayAnswerObj.answer = null; 
-                    }
-                    // save model
-                    try{
-                        await gameplay.save()
-                    } catch (err){
-                        console.log('Error while saving user answer to the GameplayModel. ', err)
-                    }
-
-            } else {
-                // cant find QuestionModel in db to compare with user Answer.
-                consolg.log('can\'t find question with this id. ')
-                //res.status(500);
-            }
-        } else if (typeof req.body.question.id === 'string' 
-            && req.body.question.id.length === 0) {
-            // this is first questino to be saved
-            console.log('First question in this game will be send.')
-        } else {
-                // client provided incorrect data for quiz id orthis is first question
-                console.log('client provided incorrect data for quiz id')
-                res.status(500);
-        }
         
 
 
@@ -164,7 +172,7 @@ module.exports = function(app){
         console.log('score : ', gameplay.score)
         console.log('-------------------------------------------');
 
-
+        // send response
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(data));
 

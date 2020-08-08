@@ -1,6 +1,7 @@
 const QuestionModel = require('../../models/quiz/quizModel').QuestionModel;
 const QuizModel = require('../../models/quiz/quizModel').QuizModel;
 const mongoose = require('mongoose');
+const { GameplayModel } = require('../../models/quiz/quizModel');
 const findQuizAndQuestions = require('../../myUtils/dbUtils').findQuizAndQuestions;
 const findQuiz = require('../../myUtils/dbUtils').findQuiz;
 
@@ -291,6 +292,11 @@ module.exports = function(app){
         res.render('../views/quiz/quizGameplay', { quiz : quiz })
     })
 
-    //
+    // GAMEPLAY RESULTS - GET 
+    app.get('/:gameplayId/results/$', async (req, res)=>{
+        const gameplayId = req.params.gameplayId;
+        const gameplay = await GameplayModel.findById(gameplayId);
+        res.render('../views/quiz/gameplayResults.ejs', { gameplay:gameplay })
+    })
 }
 

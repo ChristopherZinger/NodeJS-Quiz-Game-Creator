@@ -41,7 +41,6 @@ $(document).ready(function(){
                     question : {
                         id : null,
                         answer : null,
-
                     },
                 };
                 
@@ -58,8 +57,6 @@ $(document).ready(function(){
                         const urlquery = `gameplayKey=${gameplayKey}`;
                         url = url + `?gameplayKey=${gameplayKey}`;
                     }
-                    console.log( 'key taken from hidden input :' , gameplayKey ,', ',typeof gameplayKey);
-
                     data.question.id = myDOM.quizQuestionIdInput.value;
                     data.question.answer = $("input[type='radio'][name='q']:checked").val();
 
@@ -68,20 +65,24 @@ $(document).ready(function(){
                         url: url,
                         data : data,
                         success : (data)=>{
-                            console.log('data from the server :', data.gameplayKey)
-                            if (data.gameplayKey !== undefined ){
-                                (console.log('key received on client side : ', data.gameplayKey))
-                                // update gameplay key
-                                myDOM.gameplayKeyInput.value = data.gameplayKey;
-
-                                // populate form with questions 
-                                populateQuestionForm(data.question);
-
-                                // update question id input
-                                for(key in data.question){
-                                    console.log('->', key)
+                            if(data.isOver){
+                                //redirect to results page
+                                const gameplayId = data.gameplayId;
+                                window.location.replace(`/${gameplayId}/results/`);
+                            }else{
+                                if (data.gameplayKey !== undefined ){
+                                    // update gameplay key
+                                    myDOM.gameplayKeyInput.value = data.gameplayKey;
+    
+                                    // populate form with questions 
+                                    populateQuestionForm(data.question);
+    
+                                    // update question id input
+                                    for(key in data.question){
+                                    }
+                                    myDOM.quizQuestionIdInput.value = data.question._id;
                                 }
-                                myDOM.quizQuestionIdInput.value = data.question._id;
+
                             }
                         }
                     })
