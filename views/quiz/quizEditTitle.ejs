@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("../partials/head")  %>
+</head>
+<body>
+    <%- include("../partials/nav")  %>
+    Slug : <%- quiz.slug %>
+    <form action="/<%- quiz.slug %>/edit-title/" method="POST">
+        <input type="text" name="newTitle">
+        <input type="submit" value="submit">
+    </form>
+</body>
+</html>

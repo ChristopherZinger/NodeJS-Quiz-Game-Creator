@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const { GameplayModel } = require('../../models/quiz/quizModel');
 const findQuizAndQuestions = require('../../myUtils/dbUtils').findQuizAndQuestions;
 const findQuiz = require('../../myUtils/dbUtils').findQuiz;
-
+const slugify = require('slugify');
 
 /*
 
@@ -18,6 +18,27 @@ const findQuiz = require('../../myUtils/dbUtils').findQuiz;
 /:quiz_slug/question/delete/id
 
 */
+
+    // check if slug already exists in db 
+    const slugIsValid = async (slug, i)=>{
+        let iter = i || 0;
+        let trySlug;
+        i !== undefined && i !== 0 ? trySlug = slug + '_' + iter : trySlug = slug;
+       
+        try{
+            const quiz = await QuizModel.findOne({slug:trySlug});
+        } catch (err){
+            console.log("Error while trying new slug", err);
+        }
+
+        if( typeof quiz === 'undefined'){
+            return trySlug;
+        } else {
+            console.log(iter++)
+            return slugIsValid(slug, iter++);
+        }
+    }
+
 
 module.exports = function(app){
     // POPULATE QUESTIONS - DEV ONLY
@@ -53,54 +74,77 @@ module.exports = function(app){
         res.render('../views/quiz/quizCreate.ejs');
     })
 
+    // UPDATE QUIZ NAME - GET
+    app.get('/:quizSlug/edit-title/$', async (req, res)=>{
+        const quizSlug = req.params.quizSlug;
+        let quiz;
+
+        try{
+            quiz = await QuizModel.findOne({slug:quizSlug});
+        } catch (err) {
+            console.log('Error while looking for quiz to update the title. \n ', err)
+        }
+
+        if(typeof quiz !== 'undefined'){
+            res.render('../views/quiz/quizEditTitle.ejs', {quiz:quiz});
+        } else {
+            res.redirect(`/${quizSlug}/question/list/`) 
+        }
+        
+    })
+
+    // UPDATE QUIZ NAME - POST 
+    app.post('/:quizSlug/edit-title/$', async (req, res)=>{
+        const quizSlug = req.params.quizSlug;
+        const newTitle = req.body.newTitle;
+
+        // check if title already exists
+        const quizExists = await QuizModel.findOne({title:newTitle});
+        if( quizExists !== null ){
+            console.log('Quiz with this title already exists.')
+            res.redirect(`/${quizSlug}/question/list/`)
+            return; 
+            }
+
+        // slugify
+        const newSlug = await slugIsValid( 
+            slugify(newTitle, {
+                lower: true,
+            }));
+
+
+        // find quiz in db
+        let quiz;
+        try {
+            // try to update title and save
+            quiz = await QuizModel.findOne({slug : quizSlug});
+            quiz.title = newTitle;
+            quiz.slug = newSlug;
+
+            await quiz.save();
+        } catch (err){
+            console.log('Error while trying to update quiz name. \n ', err)
+        }
+        res.redirect(`/${quiz.slug}/question/list/`);
+    })
 
     // CREATE NEW QUIZ - POST
-    app.post('/quiz/create/$', function(req, res){
+    app.post('/quiz/create/$', async (req, res)=>{
         // create slug
-        let slug = Array.from(req.body.title)
-            .map(item => item.replace(' ', '-')).join('').toString().toLowerCase();
-        
-        // check if slug already exists in db 
-        function tryNewSlug(slug, i){
-            let trySlug;
-            typeof i === 'number' ? trySlug = `${slug}_${i}` : trySlug = slug;
-            QuizModel.findOne({ slug : trySlug })
-            .then(data=>{
-                if(data === null){
-                    console.log('saving quiz with slug: ', trySlug)
-                    // presave quiz model
-                    const quiz = new QuizModel({
-                        title : req.body.title,
-                        slug : trySlug,
-                    })
-                    // save quiz model
-                    quiz.save()
-                    .then( quiz => { 
-                        res.redirect(`/${quiz.slug}/question/create/`);
-                    })
-                    .catch(err => {
-                        console.log('Problem when saving quiz model. ', err);
-                        return err;
-                    });
-                    console.log('Error, quiz exists', err);
-                    //return err;
-                } else {
-                    // generate radom slug id 
-                    let id = '';
-                    for(let i=0; i < 15; i++){
-                        id += Math.floor(Math.random() * 10);
-                    }
-                    console.log('try again ', slug, '_', Number(id));
-                    console.log('data :', data)
-                    tryNewSlug(slug, Number(id));
-                }
-            })
-            .catch(err => {
+        let slug = slugify(req.body.title, {
+                lower: true,
+            });
+        slug = await slugIsValid(slug);
 
-            })
-        }
-        tryNewSlug(slug, null)
-    })
+        // presave quiz model
+        const quiz = new QuizModel({
+            title : req.body.title,
+            slug : slug,
+        })
+        // save quiz model
+        await quiz.save();
+        res.redirect(`/${quiz.slug}/question/create/`);
+    });     
 
 
     //  DELETE QUIZ 

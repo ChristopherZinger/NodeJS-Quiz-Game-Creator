@@ -163,10 +163,6 @@ module.exports = function(app){
 
         // // evaluate user answer from request
         evaluateUserAnswer(req, res, gameplay)
-
-        
-
-
         
         console.log(`This was game : ${data.gameplayKey} , with quiz : ${quizSlug}`)
         console.log('score : ', gameplay.score)

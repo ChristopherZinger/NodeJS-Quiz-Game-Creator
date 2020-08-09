@@ -20,6 +20,8 @@
 
 
     <!-- Remove this quiz -->
+    <a href="/<%- quiz.slug %>/edit-title/">Change Title</a>
+    <a href="/<%- quiz.slug %>/question/create">add question</a>
     <a href="/<%- quiz.slug %>/delete/">Delete this quiz</a>
 
     <!-- List of questions -->
@@ -34,7 +36,7 @@
         </li>
         <% } %>
     </ul>
-    <a href="/<%- quiz.slug %>/question/create">add question</a>
+    
 
 
 </body>
