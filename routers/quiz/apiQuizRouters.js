@@ -173,4 +173,30 @@ module.exports = function(app){
         res.end(JSON.stringify(data));
 
     })
+
+    app.post('/api/quiz/list/', async (req, res)=>{
+
+        const { query } = req.body;
+
+
+        let quizList;
+        try{
+            quizList = await QuizModel.find(
+                { title : 
+                    { $regex: new RegExp(`^${query.toLowerCase()}`, "i")}
+            });
+        } catch(err){
+            console.log('Error while looking for quizzes. \n ', err );
+        }
+
+        // send response
+        res.setHeader('Content-Type', 'application/json');
+        if(quizList.length > 0){
+            
+            res.end(JSON.stringify(quizList));
+        } else {
+            res.end(JSON.stringify([]));
+        }
+
+    })
 }
