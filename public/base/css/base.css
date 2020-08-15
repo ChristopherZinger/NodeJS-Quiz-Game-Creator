@@ -1,7 +1,42 @@
 * {
-    font-family: 'Quicksand', sans-serif;
+    font-family: 'Abel', sans-serif;
+    text-decoration: none;
+    color: white;
+    letter-spacing: 1px;
 }
 
 body{
     padding: 0 20%;
+    background-image: linear-gradient(to right, #F57C73 , #F56C77);
+    overflow-x: hidden;
+}
+
+input:focus{
+    /* border: none; */
+    outline: none;
+}
+
+label{
+    display: none;
+}
+
+input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #F6BC66;
+    opacity: 1; /* Firefox */
+  }
+
+.container{
+    position: absolute;
+    display: block;
+    width: 60%;
+    top:50%;
+    transform: translateY(-50%);
+}
+
+
+.myButton{
+    border-radius: 160px;;
+    background-color:#F57C73;
+    box-shadow: 3px 3px 3px  #F55C7A,
+    -3px -3px 3px #EBC1B9;
 }

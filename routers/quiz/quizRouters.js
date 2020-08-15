@@ -197,38 +197,49 @@ module.exports = function(app){
     })
 
     //  CREATE QUESTION - POST
-    app.post('/:quizSlug/question/create/', function(req, res){
+    app.post('/:quizSlug/question/create/', async (req, res)=>{
         // create new question
         // find quiz in db
         const quizSlug = req.params.quizSlug;
-        findQuiz(quizSlug, quiz => {
-            // pre-save question
-            const question = new QuestionModel({
-                question : req.body.question,
-                answers : {
-                    a : req.body.answerA,
-                    b : req.body.answerB,
-                    c : req.body.answerC,
-                    d : req.body.answerD,
-                },
-                correctAnswer : req.body.correctAnswer,
-                quiz : quiz.id,
-            })
-            question.save()
-            .then(question => {
+        let quiz;
+        try{
+            quiz = await QuizModel.findOne({slug: quizSlug});
+        } catch (err){
+            console.log('Error while searching quiz for new question create', err)
+            res.redirect(`/${quiz.slug}/question/list/`)
+        }
+
+        if(quiz !== undefined){
+            try {
+                // pre-save question
+                const question = new QuestionModel({
+                    question : req.body.question,
+                    answers : {
+                        a : req.body.answerA,
+                        b : req.body.answerB,
+                        c : req.body.answerC,
+                        d : req.body.answerD,
+                    },
+                    correctAnswer : req.body.correctAnswer,
+                    quiz : quiz.id,
+                })
+                await question.save()
+            } catch (err) {
+                console.log('Error while saving question for the quiz. ', err)
+            }
+
+            // save questio to the quiz
+            try {
                 // save new question to the quiz 
                 quiz.questions.push(question);
-                quiz.save();
-
-                // response
-                res.redirect(`/${quiz.slug}/question/list`);
-            })
-            .catch(err =>{ 
-                console.log('Error while adding new question to the quiz. ', err);
-                res.redirect(`/${quiz.slug}/question/list/`)
-            })
-        });
-       
+                await quiz.save();
+            } catch (err) {
+                console.log('error while adding question to the quiz', err);
+                res.redirect(`/${quiz.slug}/question/list/`);
+            }
+        }
+        // response
+        res.redirect(`/${quiz.slug}/question/list`);
     })
 
 

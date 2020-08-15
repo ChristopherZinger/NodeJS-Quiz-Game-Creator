@@ -27,9 +27,9 @@ $(document).ready(()=>{
                         a.title = 'my title';
                         a.href = `/${quiz.slug}/gameplay/`;  
                         node.append( a );
-
-                        console.log('from server :', quiz.title)
+                        a.classList.add('resultListItem')
                     })
+
                     
                 },
             })

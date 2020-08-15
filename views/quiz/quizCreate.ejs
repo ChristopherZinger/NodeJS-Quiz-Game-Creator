@@ -6,13 +6,18 @@
 <body>
     <%- include("../partials/nav")  %>
 
-    <h1>create new quiz</h1>
+    <div class="container">
+        <h1 class="title">Create new quiz</h1>
     
-    <form action="/quiz/create/" method="POST">
-        <label for="title">Quiz Title</label>
-        <input type="text" name="title" id="title" />
-        <input type="submit" value="next">
-    </form>
+        <form action="/quiz/create/" method="POST">
+            <label for="title">Quiz Title</label>
+            <input type="text" class="textInput myButton" name="title" id="title" />
+            <button type="submit" class="iconContainer myButton">
+                    <img class="icon" src="/assets/icons/arrow.svg" alt="no image" />
+            </button>
+        </form>
+    </div>
+
 
 </body>
 </html>

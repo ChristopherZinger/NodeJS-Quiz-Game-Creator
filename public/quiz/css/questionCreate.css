@@ -1,0 +1,41 @@
+
+label, input{
+    display: inline-block;
+}
+
+input[type="radio"]{
+    margin: 0px 30px;
+    height: 20px;
+    width: 20px;
+    background-color: black;
+}
+
+form {
+    display: block;
+}
+
+form div{
+    display: block;
+    margin: 20px 0px;
+}
+
+.questionInput {
+    width: 100%;
+}
+
+.container{
+    top:15%;
+    transform: translateY(-0%);
+}
+
+#submitBtn{
+    position: relative;
+    float: right;
+    padding: 2px 20px;
+    width: 150px;
+    background-color: #F69C6D;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+

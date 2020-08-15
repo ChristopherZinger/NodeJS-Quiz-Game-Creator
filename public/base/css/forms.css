@@ -1,0 +1,41 @@
+.iconContainer{
+    position: relative;
+    margin-left: 10px;
+    height: 40px;
+    width: 40px;
+}
+
+.icon{
+    position: absolute;
+    display: block;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    filter: invert();
+}
+
+form{
+    display: flex;
+}
+
+form button{
+    background-color: none;
+    outline: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+    display: block;
+    position: relative;
+}
+
+.textInput{
+    position: relative;
+    height: 40px;
+    width: 300px;
+    border: none;
+    padding: 0px 30px;
+    font-weight: 700;
+    font-size: 15px;
+}
