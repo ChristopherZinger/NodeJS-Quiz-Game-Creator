@@ -169,7 +169,7 @@ module.exports = function (app) {
                     return err;
                 })
             // return
-            res.redirect('/quiz/list/')
+            res.redirect('/')
         })
     })
 

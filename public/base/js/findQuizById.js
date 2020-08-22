@@ -28,11 +28,20 @@ $(document).ready(() => {
                         node.appendChild(tr);
                         a.classList.add('resultListItem');
                     })
+
+                    // display div with results 
+                    if (data.length > 0) {
+                        document.getElementById('resultsContainer').style.display = 'block';
+                    }
                 },
             })
                 .fail(data => {
                     console.log('error while ajax call.', data);
                 })
+        } else {
+            // hide result div
+            document.getElementById('resultsContainer').style.display = 'none';
+
         }
     })
 })
