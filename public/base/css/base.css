@@ -1,13 +1,33 @@
+
+
+:root{
+    --col_0 : #FFFFFF;
+    --col_1 : #EFEEEE;
+    --col_2 : #DFDDDD;
+    --col_3 : #CFCDCD;
+    --col_4 : #BEBCBC;
+    --col_5 : #AEABAB;
+    --col_6 : #9E9A9A;
+    --col_7 : #8E8A8A;
+    --col_8 : #7E7979;
+    --col_9 : #6E6868;
+    --col_10 : #5D5757;
+    --col_11 : #4D4747;
+    --col_12 : #3D3636;
+    --col_13 : #2D2525;
+
+}
+
 * {
     font-family: 'Abel', sans-serif;
     text-decoration: none;
-    color: white;
+    color: var(--col_13);
     letter-spacing: 1px;
 }
 
 body{
     padding: 0 20%;
-    background-image: linear-gradient(to right, #F57C73 , #F56C77);
+    background-image: linear-gradient(to right, var(--col_0) , var(--col_1));
     overflow-x: hidden;
 }
 
@@ -21,22 +41,34 @@ label{
 }
 
 input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: #F6BC66;
+    color: var(--col_8);
     opacity: 1; /* Firefox */
   }
 
 .container{
+    top:15%;
+    transform: translateY(-0%);
     position: absolute;
     display: block;
     width: 60%;
-    top:50%;
-    transform: translateY(-50%);
 }
 
 
+
 .myButton{
-    border-radius: 160px;;
-    background-color:#F57C73;
-    box-shadow: 3px 3px 3px  #F55C7A,
-    -3px -3px 3px #EBC1B9;
+    border-radius: 21px;
+    background-color:var(--col_1);
+    box-shadow: 5px 5px 5px var(--col_2),
+    -5px -5px 5px var(--col_0);
+}
+
+.submitBtn{
+    position: relative;
+    float: right;
+    padding: 5px 20px;
+    width: 150px;
+    background-color: var(--col_3);
+    color: var(--col_0);
+    font-size: 20px;
+    font-weight: 600;
 }

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include("../partials/head")  %>
     <link rel="stylesheet" type="text/css" href="/assets/quiz/css/questionCreate.css" media="screen" charset="utf-8">
 
 </head>
+
 <body>
     <%- include("../partials/nav")  %>
     <div class="container">
@@ -13,90 +15,96 @@
         <form action="/<%- quiz.slug %>/question/create/" method="POST">
             <div>
                 <!-- <label for="question">Question</label> -->
-                <input class="questionInput textInput myButton" type="text" name="question" id="question" 
-                placeholder="Type your question here | eg. What is the capital city of Netherlands?" />
+                <input class="questionInput textInput myButton" type="text" name="question" id="question"
+                    placeholder="Type your question here | eg. What is the capital city of Netherlands?" />
             </div>
             <div>
                 <label for="A">A</label>
                 <input type="radio" id="A" name="correctAnswer" value="A">
                 <!-- <label for="answerA">A</label> -->
-                <input class="textInput myButton" type="text" name="answerA" id="answerA"
-                placeholder="eg. Amsterdam" />
+                <input class="textInput myButton" type="text" name="answerA" id="answerA" placeholder="eg. Amsterdam" />
             </div>
             <div>
                 <label for="B">B</label>
                 <input type="radio" id="B" name="correctAnswer" value="B">
                 <!-- <label for="answerB">B</label> -->
-                <input class="textInput myButton" type="text" name="answerB" id="answerB" 
-                placeholder="eg. Haarlem"/>
+                <input class="textInput myButton" type="text" name="answerB" id="answerB" placeholder="eg. Haarlem" />
             </div>
             <div>
                 <label for="C">C</label>
                 <input type="radio" id="C" name="correctAnswer" value="C">
                 <!-- <label for="answerC">C</label> -->
-                <input class="textInput myButton" type="text" name="answerC" id="answerC" 
-                placeholder="eg. Hague"/>
+                <input class="textInput myButton" type="text" name="answerC" id="answerC" placeholder="eg. Hague" />
             </div>
             <div>
-                <label for="D">D</label> 
+                <label for="D">D</label>
                 <input type="radio" id="D" name="correctAnswer" value="D">
                 <!-- <label for="answerD">D</label> -->
-                <input class="textInput myButton" type="text" name="answerD" id="answerD" 
-                placeholder="eg. Rotterdam"/>
+                <input class="textInput myButton" type="text" name="answerD" id="answerD" placeholder="eg. Rotterdam" />
             </div>
             <div>
 
             </div>
-            <button id="submitBtn" type="submit" class="iconContainer myButton"> Save </button>
+            <button type="submit" class="submitBtn myButton"> Save </button>
 
         </form>
-    
+
         <% } else { %>
-            <form action="/<%- quiz.slug %>/question/edit/<%- question.id %>" method="POST">
-                <div>
-                    <!-- <label for="question">Question</label> -->
-                    <input class="textInput myButton" type="text" name="question" id="question" value="<%= question.question %>" />
-                </div>
-                <div>
-                    <!-- <label for="answerA">A</label> -->
-                    <input class="textInput myButton" type="text" name="answerA" id="answerA" value="<%= question.answers.a %>"/>
-                </div>
-                <div>
-                    <!-- <label for="answerB">B</label> -->
-                    <input class="textInput myButton" type="text" name="answerB" id="answerB" value="<%= question.answers.b %>"/>
-                </div>
-                <div>
-                    <!-- <label for="answerC">C</label> -->
-                    <input class="textInput myButton" type="text" name="answerC" id="answerC" value="<%= question.answers.c %>"/>
-                </div>
-                <div>
-                    <!-- <label for="answerD">D</label> -->
-                    <input class="textInput myButton" type="text" name="answerD" id="answerD" value="<%= question.answers.d %>"/>
-                </div>
-                <div>
-                    <label for="correctAnswer">Correct Answer</label>
-                    <select name="correctAnswer" id="correctAnswer" >
-                        <option value="A" <% if (question.correctAnswer == "A") { %> selected<% } %> >A</option>
-                        <option value="B" <% if (question.correctAnswer == "B") { %> selected<% } %> >B</option>
-                        <option value="C" <% if (question.correctAnswer == "C") { %> selected<% } %> >C</option>
-                        <option value="D" <% if (question.correctAnswer == "D") { %> selected<% } %> >D</option>
-                      </select>
-                </div>
-                <div>
-                    <input type="submit" value="save">
-                </div>
-            </form>
+        <form action="/<%- quiz.slug %>/question/edit/<%- question.id %>" method="POST">
+            <div>
+                <!-- <label for="question">Question</label> -->
+                <input class="questionInput textInput myButton" type="text" name="question" id="question"
+                    value="<%= question.question %>" />
+            </div>
+            <div>
+                <label for="A">A</label>
+                <input type="radio" id="A" name="correctAnswer" value="A" <% if (question.correctAnswer == "A") { %>
+                    checked <% } %>>
+                <!-- <label for="answerA">A</label> -->
+                <input class="textInput myButton" type="text" name="answerA" id="answerA"
+                    value="<%= question.answers.a %>" />
+            </div>
+            <div>
+                <label for="B">B</label>
+                <input type="radio" id="B" name="correctAnswer" value="B" <% if (question.correctAnswer == "B") { %>
+                    checked <% } %>>
+                <!-- <label for="answerB">B</label> -->
+                <input class="textInput myButton" type="text" name="answerB" id="answerB"
+                    value="<%= question.answers.b %>" />
+            </div>
+            <div>
+                <label for="C">C</label>
+                <input type="radio" id="C" name="correctAnswer" value="C" <% if (question.correctAnswer == "C") { %>
+                    checked <% } %>>
+                <!-- <label for="answerC">C</label> -->
+                <input class="textInput myButton" type="text" name="answerC" id="answerC"
+                    value="<%= question.answers.c %>" />
+            </div>
+            <div>
+                <label for="D">D</label>
+                <input type="radio" id="D" name="correctAnswer" value="D" <% if (question.correctAnswer == "D") { %>
+                    checked <% } %>>
+                <!-- <label for="answerD">D</label> -->
+                <input class="textInput myButton" type="text" name="answerD" id="answerD"
+                    value="<%= question.answers.d %>" />
+            </div>
+
+            <div>
+                <button class="submitBtn myButton" type="submit"> Save </button>
+            </div>
+        </form>
         <% } %>
-    
+
         <% if( typeof questions !== [] ) { %>
-            <!-- <h3>Questions : </h3>
+        <!-- <h3>Questions : </h3>
             <ul> -->
-                <% for(var i = 0; i < questions.length; i++) { %>
-                <!-- <li><a href="/<%- quiz.slug %>/question/edit/<%- questions[i].id %>"> <%= questions[i].question %> </a></li>  -->
-                <% } %>
-            <!-- </ul> -->
+        <% for(var i = 0; i < questions.length; i++) { %>
+        <!-- <li><a href="/<%- quiz.slug %>/question/edit/<%- questions[i].id %>"> <%= questions[i].question %> </a></li>  -->
+        <% } %>
+        <!-- </ul> -->
         <% } %>
     </div>
 
 </body>
+
 </html>

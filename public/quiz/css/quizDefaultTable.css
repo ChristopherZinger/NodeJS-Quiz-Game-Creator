@@ -1,0 +1,15 @@
+table{
+    margin-top:50px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 21px;
+}
+
+th{
+    text-align: left;
+}
+
+td{
+    padding: 10px 5px;
+    border-top: 1px solid var(--col_3);
+}

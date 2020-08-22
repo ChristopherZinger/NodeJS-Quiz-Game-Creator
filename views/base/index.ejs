@@ -1,28 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include("../partials/head")  %>
 </head>
+
 <body>
     <%- include("../partials/nav")  %>
     <link rel="stylesheet" href="/assets/base/css/index.css" />
+    <link rel="stylesheet" href="/assets/quiz/css/quizDefaultTable.css" />
 
     <div class="container">
         <h1 class="title">Quiz Creator</h1>
         <form>
             <label for="quizTitleInput">Find Quiz</label>
-            <input class="textInput myButton" type="text" name="quizTitleInput" onchange="myfun()" placeholder="Find Quiz">
-            <div  class="iconContainer myButton">
+            <input id="quizTitleInput" class="textInput myButton" type="text" name="quizTitleInput"
+                placeholder="Find Quiz">
+            <div class="iconContainer myButton">
                 <img class="icon" src="/assets/icons/search.svg" alt="no image" />
             </div>
         </form>
-        <div id="resultsContainer" class="myButton">
-            <div class="resultListItem">
-                <h2>Results</h2>
-            </div>
-            
-            <div id="resultsList">
-            </div>
+        <div id="resultsContainer">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            quiz name:
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="resultsList">
+
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -34,4 +44,5 @@
     <script src="/assets/base/js/findQuizById.js">
     </script>
 </body>
+
 </html>

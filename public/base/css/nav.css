@@ -12,7 +12,7 @@ li{
     font-weight: 600;
 }
 li, a {
-    color: white;
+    color: black;
 }
 nav ul {
     display: flex;
