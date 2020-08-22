@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include("../partials/head")  %>
+    <link rel="stylesheet" href="/assets/quiz/css/quizEditTitle.css">
 </head>
+
 <body>
     <%- include("../partials/nav")  %>
-    Slug : <%- quiz.slug %>
-    <form action="/<%- quiz.slug %>/edit-title/" method="POST">
-        <input type="text" name="newTitle">
-        <input type="submit" value="submit">
-    </form>
+
+    <div class="container">
+        <h1>Chnage the title of " <italic><%= quiz.title %></italic> " to : </h1>
+        <form action="/<%- quiz.slug %>/edit-title/" method="POST">
+            <input id="newTitleInput" type="text" class="textInput myButton" name="newTitle"
+                placeholder="<%= quiz.title %>">
+            <input id="submitInput" type="submit" class=" myButton submitBtn " value="update">
+        </form>
+    </div>
+
 </body>
+
 </html>

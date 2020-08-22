@@ -16,31 +16,35 @@
             <div>
                 <!-- <label for="question">Question</label> -->
                 <input class="questionInput textInput myButton" type="text" name="question" id="question"
-                    placeholder="Type your question here | eg. What is the capital city of Netherlands?" />
+                    placeholder="Type your question here | eg. What is the capital city of Netherlands?" required />
             </div>
             <div>
                 <label for="A">A</label>
-                <input type="radio" id="A" name="correctAnswer" value="A">
+                <input type="radio" id="A" name="correctAnswer" value="A" required>
                 <!-- <label for="answerA">A</label> -->
-                <input class="textInput myButton" type="text" name="answerA" id="answerA" placeholder="eg. Amsterdam" />
+                <input class="textInput myButton" type="text" name="answerA" id="answerA" placeholder="eg. Amsterdam"
+                    required />
             </div>
             <div>
                 <label for="B">B</label>
                 <input type="radio" id="B" name="correctAnswer" value="B">
                 <!-- <label for="answerB">B</label> -->
-                <input class="textInput myButton" type="text" name="answerB" id="answerB" placeholder="eg. Haarlem" />
+                <input class="textInput myButton" type="text" name="answerB" id="answerB" placeholder="eg. Haarlem"
+                    required />
             </div>
             <div>
                 <label for="C">C</label>
                 <input type="radio" id="C" name="correctAnswer" value="C">
                 <!-- <label for="answerC">C</label> -->
-                <input class="textInput myButton" type="text" name="answerC" id="answerC" placeholder="eg. Hague" />
+                <input class="textInput myButton" type="text" name="answerC" id="answerC" placeholder="eg. Hague"
+                    required />
             </div>
             <div>
                 <label for="D">D</label>
                 <input type="radio" id="D" name="correctAnswer" value="D">
                 <!-- <label for="answerD">D</label> -->
-                <input class="textInput myButton" type="text" name="answerD" id="answerD" placeholder="eg. Rotterdam" />
+                <input class="textInput myButton" type="text" name="answerD" id="answerD" placeholder="eg. Rotterdam"
+                    required />
             </div>
             <div>
 
@@ -54,15 +58,15 @@
             <div>
                 <!-- <label for="question">Question</label> -->
                 <input class="questionInput textInput myButton" type="text" name="question" id="question"
-                    value="<%= question.question %>" />
+                    value="<%= question.question %>" required />
             </div>
             <div>
                 <label for="A">A</label>
                 <input type="radio" id="A" name="correctAnswer" value="A" <% if (question.correctAnswer == "A") { %>
-                    checked <% } %>>
+                    checked <% } %> required>
                 <!-- <label for="answerA">A</label> -->
                 <input class="textInput myButton" type="text" name="answerA" id="answerA"
-                    value="<%= question.answers.a %>" />
+                    value="<%= question.answers.a %>" required />
             </div>
             <div>
                 <label for="B">B</label>
@@ -70,7 +74,7 @@
                     checked <% } %>>
                 <!-- <label for="answerB">B</label> -->
                 <input class="textInput myButton" type="text" name="answerB" id="answerB"
-                    value="<%= question.answers.b %>" />
+                    value="<%= question.answers.b %>" required />
             </div>
             <div>
                 <label for="C">C</label>
@@ -78,7 +82,7 @@
                     checked <% } %>>
                 <!-- <label for="answerC">C</label> -->
                 <input class="textInput myButton" type="text" name="answerC" id="answerC"
-                    value="<%= question.answers.c %>" />
+                    value="<%= question.answers.c %>" required />
             </div>
             <div>
                 <label for="D">D</label>
@@ -86,7 +90,7 @@
                     checked <% } %>>
                 <!-- <label for="answerD">D</label> -->
                 <input class="textInput myButton" type="text" name="answerD" id="answerD"
-                    value="<%= question.answers.d %>" />
+                    value="<%= question.answers.d %>" required />
             </div>
 
             <div>

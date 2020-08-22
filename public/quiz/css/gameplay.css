@@ -1,0 +1,31 @@
+
+#quizSlugInput, #gameplayKeyInput, #questionIdInput {
+    display: none;
+}
+
+.startBtn{
+    position: relative;
+    display: block;
+    margin-top: 50px;
+    padding: auto;
+}
+
+
+label{
+    display: block;
+}
+.questionInput{
+    width: 100%;
+}
+#questionInputWrapper{
+    width: 100%;
+}
+
+#questionInputWrapper div{
+    display: flex;
+}
+
+label, input, h4{
+    display: flex;
+    align-items: center;
+}

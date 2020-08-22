@@ -1,58 +1,72 @@
-$(document).ready(function(){
+$(document).ready(function () {
 
-    (function(){
+    (function () {
         const myDOM = {
-            gameplayKeyInput : document.getElementById('gameplayKeyInput'),
-            quizform : $('#quizform'),
-            quizSubmitBtn : $('#quizSubmit'),
-            quizQuestionIdInput : document.getElementById('questionIdInput'),
-            quizSlugInput : document.getElementById('quizSlugInput')
+            gameplayKeyInput: document.getElementById('gameplayKeyInput'),
+            quizform: $('#quizform'),
+            quizSubmitBtn: $('#quizSubmit'),
+            quizQuestionIdInput: document.getElementById('questionIdInput'),
+            quizSlugInput: document.getElementById('quizSlugInput')
         }
 
-        function populateQuestionForm(q){
+        function populateQuestionForm(q) {
             newQuestionData = `
             <div id="questionInputWrapper">
-                <h4>${q.question}</h4>
-                <input type="radio" id="a" name="q" value="A">
-                <label for="a">${q.answers.a}</label><br>
-                <input type="radio" id="b" name="q" value="B">
-                <label for="b">${q.answers.b}</label><br>
-                <input type="radio" id="c" name="q" value="C">
-                <label for="c">${q.answers.c}</label><br>
-                <input type="radio" id="d" name="q" value="D">
-                <label for="d">${q.answers.d}</label><br>
+            <h4 class="questionInput textInput myButton">${q.question}</h4>
+
+            <div>
+            <input type="radio" id="a" name="q" value="A">
+            <label class="myButton textInput answerBtn" for="a">${q.answers.a}</label>
+            </div>
+
+            <div>
+            <input type="radio" id="b" name="q" value="B">
+            <label class="myButton textInput answerBtn" for="b">${q.answers.b}</label>
+            </div>
+
+            <div>
+            <input type="radio" id="c" name="q" value="C">
+            <label class="myButton textInput answerBtn" for="c">${q.answers.c}</label>
+            </div>
+
+            <div>
+            <input type="radio" id="d" name="q" value="D">
+            <label class="myButton textInput answerBtn" for="d">${q.answers.d}</label>
+            </div>
+    
             </div>
             `
             // remove old question data
             let questionInputWrapper = document.getElementById('questionInputWrapper');
-            if(questionInputWrapper !== null){
+            if (questionInputWrapper !== null) {
                 $('#questionInputWrapper').replaceWith(newQuestionData)
-            }else{
+            } else {
                 // create new questions
-                myDOM.quizform.append(newQuestionData);
+                $('#quizSubmit').before(newQuestionData)
             }
 
         }
 
-        const addEvents = function(){
-            document.addEventListener('click', (e)=>{
+        const addEvents = function () {
+            document.addEventListener('click', (e) => {
 
                 const data = {
-                    question : {
-                        id : null,
-                        answer : null,
+                    question: {
+                        id: null,
+                        answer: null,
                     },
                 };
-                
+
                 // submit button click
-                if(e.target.id === 'quizSubmit'){
+                if (e.target.id === 'quizSubmit') {
+
                     // get quiz data from form
                     const quizSlug = myDOM.quizSlugInput.value;
-                    let url = `/api/${quizSlug}`; 
-   
+                    let url = `/api/${quizSlug}`;
+
                     // get gameplay key from form
                     const gameplayKey = myDOM.gameplayKeyInput.value;
-                    if( typeof gameplayKey !== undefined ){
+                    if (typeof gameplayKey !== undefined) {
                         // create url query
                         const urlquery = `gameplayKey=${gameplayKey}`;
                         url = url + `?gameplayKey=${gameplayKey}`;
@@ -63,40 +77,39 @@ $(document).ready(function(){
                     // create ajax call
                     $.post({
                         url: url,
-                        data : data,
-                        success : (data)=>{
-                            if(data.isOver){
+                        data: data,
+                        success: (data) => {
+                            if (data.isOver) {
                                 //redirect to results page
                                 const gameplayId = data.gameplayId;
                                 window.location.replace(`/${gameplayId}/results/`);
-                            }else{
-                                if (data.gameplayKey !== undefined ){
+                            } else {
+                                if (data.gameplayKey !== undefined) {
                                     // update gameplay key
                                     myDOM.gameplayKeyInput.value = data.gameplayKey;
-    
+
                                     // populate form with questions 
                                     populateQuestionForm(data.question);
-    
+
                                     // update question id input
-                                    for(key in data.question){
-                                    }
                                     myDOM.quizQuestionIdInput.value = data.question._id;
+                                    $('#quizSubmit').val('Next')
                                 }
 
                             }
                         }
                     })
-                    .fail(data=>{
-                        console.log('error while ajax call.', data);
-                    })
+                        .fail(data => {
+                            console.log('error while ajax call.', data);
+                        })
                 }
 
             })
         }
 
-        const init = function(){
+        const init = function () {
             // prevent form from reloading the page
-            myDOM.quizform.submit(function(e){
+            myDOM.quizform.submit(function (e) {
                 return false;
             });
 

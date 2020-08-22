@@ -58,6 +58,7 @@ input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
 .myButton{
     border-radius: 21px;
     background-color:var(--col_1);
+    border: none;
     box-shadow: 5px 5px 5px var(--col_2),
     -5px -5px 5px var(--col_0);
 }
