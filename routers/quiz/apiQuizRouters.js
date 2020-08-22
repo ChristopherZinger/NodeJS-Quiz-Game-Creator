@@ -58,12 +58,11 @@ const evaluateUserAnswer = async (req, res, gameplay) => {
         } else {
             // cant find QuestionModel in db to compare with user Answer.
             consolg.log('can\'t find question with this id. ')
-            //res.status(500);
+            res.status(500);
         }
     } else if (typeof req.body.question.id === 'string'
         && req.body.question.id.length === 0) {
         // this is first questino to be saved
-        console.log('First question in this game will be send.')
     } else {
         // client provided incorrect data for quiz id orthis is first question
         console.log('client provided incorrect data for quiz id')
@@ -140,9 +139,7 @@ module.exports = function (app) {
 
         // abourt if all questions were already asked
         if (newQuestion === undefined) {
-            // redirect to results
-            console.log('All question were asked. this is the end of the game \n ',
-                newQuestion, ' ', typeof newQuestion)
+            // redirect to results after last question
             data.isOver = true;
             data.gameplayId = gameplay.id;
 
@@ -165,10 +162,6 @@ module.exports = function (app) {
         // // evaluate user answer from request
         evaluateUserAnswer(req, res, gameplay)
 
-        console.log(`This was game : ${data.gameplayKey} , with quiz : ${quizSlug}`)
-        console.log('score : ', gameplay.score)
-        console.log('-------------------------------------------');
-
         // send response
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify(data));
@@ -177,8 +170,6 @@ module.exports = function (app) {
 
     // QUIZ FIND GAMES API
     app.post('/api/quiz/list/', async (req, res) => {
-        console.log('-------------')
-
         const { query } = req.body;
         let quizList;
         try {
