@@ -137,19 +137,8 @@ module.exports = function (app) {
             }
         })
 
-        // abourt if all questions were already asked
-        if (newQuestion === undefined) {
-            // redirect to results after last question
-            data.isOver = true;
-            data.gameplayId = gameplay.id;
-
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify(data));
-            return;
-        }
-
         // push new question to gameplay answer list
-        if (newQuestion != null) {
+        if (newQuestion != null && newQuestion !== undefined) {
             gameplay.answers.push({ question: newQuestion })
             try {
                 await gameplay.save()
@@ -161,6 +150,17 @@ module.exports = function (app) {
 
         // // evaluate user answer from request
         evaluateUserAnswer(req, res, gameplay)
+
+        // abort if all questions were already asked
+        if (newQuestion === undefined) {
+            // redirect to results after last question
+            data.isOver = true;
+            data.gameplayId = gameplay.id;
+
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify(data));
+            return;
+        }
 
         // send response
         res.setHeader('Content-Type', 'application/json');

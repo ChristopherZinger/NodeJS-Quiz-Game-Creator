@@ -1,0 +1,19 @@
+.resultWrapper{
+    position: relative;
+    display: flex;
+    align-items: center;
+    float: none;
+
+    margin-top: 200px;;
+    border-radius: 50%;
+    justify-content: space-around;
+
+    top: 100%;
+    left: 50%;
+
+    width: 200px;
+    height: 200px;
+
+    transform: translate(-50%, -50%);
+
+}

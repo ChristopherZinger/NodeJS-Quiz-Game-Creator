@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include("../partials/head")  %>
+    <link rel="stylesheet" href="/assets/quiz/css/gameplayResults.css">
 </head>
+
 <body>
     <%- include("../partials/nav")  %>
-    <h1>Quiz Results:</h1>
-    <h2><%= gameplay.score %> pts</h2>
+    <div class="container">
+        <h1>Your score</h1>
+        <div class=" myButton resultWrapper">
+            <h2><%= gameplay.score %> pts</h2>
+        </div>
+    </div>
+
 </body>
+
 </html>
